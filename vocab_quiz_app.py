@@ -180,7 +180,7 @@ def reset_question(words):
     st.session_state.choices = choices
     st.session_state.answered = False
     st.session_state.result = ""
-    st.session_state.selected_answer = None
+    st.session_state.question_no += 1
 
 
 st.set_page_config(page_title="Notion単語クイズ", page_icon="📚")
@@ -229,6 +229,7 @@ for key, default_value in {
     "wrong_count": 0,
     "answered": False,
     "result": "",
+    "question_no": 0,
 }.items():
     if key not in st.session_state:
         st.session_state[key] = default_value
@@ -298,7 +299,7 @@ st.markdown(
 answer = st.radio(
     "正しい用語を選んでください",
     choices,
-    key="selected_answer",
+    key=f"selected_answer_{st.session_state.question_no}",
     disabled=st.session_state.answered,
 )
 
