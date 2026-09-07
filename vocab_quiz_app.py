@@ -204,6 +204,13 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+#回答後の自動遷移処理
+#ラジオボタンが作成される前に、次の問題を準備する
+if st.session_state.pop("advance_question", False):
+    st.cache_data.clear()
+    refreshed_words = load_words_from_notion()
+    reset_question(refreshed_words)
+
 words = load_words_from_notion()
 
 if len(words) < 4:
@@ -343,10 +350,8 @@ if st.session_state.answered:
             st.warning("不正解数が3回以上になったため、優先復習の対象です。")
 
 #1.5秒後に自動で次の問題
-    time.sleep(1.0)
+    time.sleep(0.8)
 
-    st.cache_data.clear()
-    refreshed_words = load_words_from_notion()
-    reset_question(refreshed_words)
+    st.session_state.advance_question = True
 
     st.rerun()
