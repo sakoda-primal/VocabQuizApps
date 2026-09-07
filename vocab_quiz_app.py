@@ -343,10 +343,10 @@ if st.session_state.answered:
             st.warning("不正解数が3回以上になったため、優先復習の対象です。")
 
 #1.5秒後に自動で次の問題
-time.sleep(1.0)
+    time.sleep(1.0)
 
-st.cache_data.clear()
-refreshed_words = load_words_from_notion()
-reset_question(refreshed_words)
-
-st.rerun()
+    st.cache_data.clear()
+    refreshed_words = load_words_from_notion()
+    reset_question(refreshed_words)
+    
+    st.rerun()
