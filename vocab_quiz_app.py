@@ -303,7 +303,7 @@ answer = st.radio(
     disabled=st.session_state.answered,
 )
 
-col1, col2 = st.columns(2)
+col1,  = st.columns(1)
 with col1:
     if st.button(
         "回答する",
@@ -348,5 +348,5 @@ if st.session_state.answered:
     st.cache_data.clear()
     refreshed_words = load_words_from_notion()
     reset_question(refreshed_words)
-    
+
     st.rerun()
