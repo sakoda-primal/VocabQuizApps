@@ -2,6 +2,7 @@
 # cd study_app
 # python -m streamlit run vocab_quiz_app_v2.py
 
+import time
 import random
 from datetime import date
 
@@ -180,7 +181,7 @@ def reset_question(words):
     st.session_state.choices = choices
     st.session_state.answered = False
     st.session_state.result = ""
-    st.session_state.question_no += 1
+    st.session_state.selected_answer = None
 
 
 st.set_page_config(page_title="Notion単語クイズ", page_icon="📚")
@@ -229,7 +230,6 @@ for key, default_value in {
     "wrong_count": 0,
     "answered": False,
     "result": "",
-    "question_no": 0,
 }.items():
     if key not in st.session_state:
         st.session_state[key] = default_value
@@ -299,7 +299,7 @@ st.markdown(
 answer = st.radio(
     "正しい用語を選んでください",
     choices,
-    key=f"selected_answer_{st.session_state.question_no}",
+    key="selected_answer",
     disabled=st.session_state.answered,
 )
 
@@ -331,7 +331,6 @@ with col1:
                 property_name="不正解数",
                 current_count=question["wrong_count"],
             )
-        st.rerun()
 
 if st.session_state.answered:
     if st.session_state.result.startswith("正解"):
@@ -343,14 +342,11 @@ if st.session_state.answered:
         if question["wrong_count"] + 1 >= REVIEW_WRONG_COUNT:
             st.warning("不正解数が3回以上になったため、優先復習の対象です。")
 
-with col2:
-    if st.button(
-        "次の問題へ",
-        key="next_button",
-        disabled=not st.session_state.answered,
-        use_container_width=True,
-    ):
-        st.cache_data.clear()
-        refreshed_words = load_words_from_notion()
-        reset_question(refreshed_words)
-        st.rerun()
+#1.5秒後に自動で次の問題
+time.sleep(1.0)
+
+st.cache_data.clear()
+refreshed_words = load_words_from_notion()
+reset_question(refreshed_words)
+
+st.rerun()
